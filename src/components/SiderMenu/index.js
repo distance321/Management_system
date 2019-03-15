@@ -6,6 +6,7 @@ import styles from './index.css'
 const { Sider } = Layout;
 @connect(({ menus, routing }) => ({
 	menuItems: menus.menuItems,
+	collapsed: menus.collapsed,
 	pathname: routing.location.pathname
 }))
 class SiderMenu extends Component {
@@ -34,12 +35,12 @@ class SiderMenu extends Component {
 
 	render() {
 		const { SubMenu } = Menu;
-		const { menuItems, pathname } = this.props;
+		const { menuItems, pathname, collapsed } = this.props;
 		return (
 			<Sider
+				trigger={null}
 				collapsible
-				collapsed={this.state.collapsed}
-				onCollapse={this.onCollapse}
+				collapsed={collapsed}
 			>
 				<div className={styles.logo} />
 				<Menu
@@ -50,7 +51,7 @@ class SiderMenu extends Component {
 					selectedKeys={[pathname]}
 				>
 					{menuItems.map(item => (
-						<SubMenu key={item.title} title={item.title}>
+						<SubMenu key={item.key} title={item.title}>
 							{item.subItems.map(subItem => (
 								<Menu.Item key={subItem.url}>
 									<Link to={subItem.url}>{subItem.title}</Link>

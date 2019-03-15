@@ -12,6 +12,7 @@ export default {
 				state.tabs.push(tab);
 				state.active_stack.push(tab.url);
 			}
+			return state
 		},
 		remove(state, payload) {
 			const targetKey = payload.payload;

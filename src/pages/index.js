@@ -1,5 +1,5 @@
 import Redirect from 'umi/redirect';
 
 export default function() {
-  return <Redirect to="/user"/>
+  return <Redirect to="/home"/>
 }

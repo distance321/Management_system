@@ -4,7 +4,6 @@ import { Tabs } from 'antd';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import classnames from 'classnames';
-
 const { TabPane } = Tabs;
 
 @connect(({ tabs, routing }) => ({

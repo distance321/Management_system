@@ -12,11 +12,11 @@ class RightContent extends PureComponent {
 		);
 		
 		return (
-			<>			
+			<div style={{float: 'right'}}>			
 				<Dropdown overlay={DropMenus}>
 					<a><Icon type="user" style={{padding:'18px 10px',fontSize:'24px'}}/>admin</a>
 				</Dropdown>
-			</>
+			</div>
 		);
 	}
 }
