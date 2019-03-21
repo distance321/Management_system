@@ -9,7 +9,6 @@ let dataList = [
 ]
 export default {
     "GET /api/v1/users/" : (req,res) => {
-        const params = req.query
         res.send(
             {
                 "count": dataList.length,
@@ -18,7 +17,6 @@ export default {
         )
     },
     "GET /api/v1/permissions/" : (req,res) => {
-        const params = req.query
         res.send(
             {
                 "count": dataList.length,
@@ -48,7 +46,6 @@ export default {
 		})
     },
     'POST /api/v1/users/:id/reset_pwd': (req, res) => {
-        console.log(req)
         res.send({
             status: 'OK'
         });
