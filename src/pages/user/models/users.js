@@ -51,27 +51,14 @@ export default {
 			}
 		},
 		*create({ payload }, { put, call }) {
-			const userInfo = payload.userInfo
-			const user_permissions = payload.user_permissions
-			const result = yield call(createUsers, userInfo);
+			const result = yield call(createUsers, payload);
 			if (result) {
-				result.groups = [2]
-				let permissions = []
-				user_permissions.forEach(item => {
-					if(item.name !== 'user_management'){
-						permissions.push(item.id)
-					}
+				yield call(notification.success, {
+					message: '创建成功'
 				});
-				result.user_permissions = permissions
-				const res = yield call(updateUsers, { userInfo : result, id : result.id })
-				if(res){
-					yield call(notification.success, {
-						message: '创建成功'
-					});
-					yield put({
-						type: 'fetchUsers'
-					});
-				}
+				yield put({
+					type: 'fetchUsers'
+				});
 			}
 		},
 		*update({ payload }, { put, call }) {

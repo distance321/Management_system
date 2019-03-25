@@ -9,19 +9,17 @@ export async function fetchPermissions() {
 	return request(buildURL(`/api/v1/permissions/`));
 }
 export async function updateUsers(params) {
-	const id = params.id
+	const id = {id : params.id}
 	const userInfo = params.userInfo
-	return request(buildURL(`/api/v1/users/${id}/`), {
-		method: 'PATCH',
+	return request(buildURL(`/api/v1/users/?${stringify(id)}`), {
+		method: 'PUT',
 		body: userInfo
 	});
 }
 export async function deleteUsersById(id) {
-	return request(buildURL(`/api/v1/users/${id}`), {
-		method: 'DELETE',
-		body: {
-			id
-		}
+	const ID = {id : id}
+	return request(buildURL(`/api/v1/users/?${stringify(ID)}`), {
+		method: 'DELETE'
 	});
 }
 export async function createUsers(params) {

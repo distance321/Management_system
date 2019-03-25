@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 import { Input, Modal, Form, DatePicker, Select } from 'antd';
 import moment from 'moment'
+import { RegTel } from '@/constants/commonData';
 const Option = Select.Option;
 const formItemLayout = {
     labelCol: {
@@ -64,10 +65,6 @@ class PeopleModal extends PureComponent {
                 title: '籍贯',
                 dataIndex: 'county'
             },
-            {
-                title: '联系方式',
-                dataIndex: 'tel'
-            },
         ]
         return (
             <>
@@ -94,6 +91,18 @@ class PeopleModal extends PureComponent {
                                 })(<Input />)}
                             </Form.Item>
                         ))}
+                        <Form.Item {...formItemLayout} label="联系方式">
+						{getFieldDecorator('tel', {
+							rules: [
+								{
+									required: true,
+									message: '请输入正确的联系方式',
+									pattern: RegTel
+								}
+							],
+							initialValue : originPeople.tel
+						})(<Input />)}
+                        </Form.Item>
                         <Form.Item {...formItemLayout} label="出生日期">
                             {getFieldDecorator('birthDate', {
                                 rules: [

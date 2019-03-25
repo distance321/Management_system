@@ -2,7 +2,6 @@ import { Layout } from 'antd';
 import styles from './index.css'
 import { connect } from 'dva';
 import GlobalHeader from '@/components/GlobalHeader';
-import GlobalTabs from '@/components/GlobalTabs';
 import SiderMenu from '@/components/SiderMenu'
 import Redirect from 'umi/redirect';
 import RenderAuthorized from 'ant-design-pro/lib/Authorized';
@@ -70,7 +69,6 @@ class SiderDemo extends PureComponent {
             <SiderMenu/>
             <Content >
             <GlobalHeader/>
-            <GlobalTabs/>
             <LocaleProvider locale={zh_CN}><div className={styles.page_content}>{children}<GlobalFooter links={links} copyright={copyright} /></div></LocaleProvider> 
             </Content>
           </Layout>

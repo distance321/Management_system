@@ -88,10 +88,9 @@ export default {
 				payload: result
 			});
 		},
-		*resetPwd({ payload }, { call, put, select}) {
-			const id= yield select(state => state.login.userId)
-			const res = yield call(resetPwd, {password: payload, id: id});
-			if (res.status === 'password set') {
+		*resetPwd({ payload }, { call, put }) {
+			const res = yield call(resetPwd, payload);
+			if (res.status === 'OK') {
 				yield put({
 					type: 'changeResetSuccess'
 				});

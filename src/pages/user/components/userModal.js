@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Input, Modal, Form, Select } from 'antd';
-const Option = Select.Option;
+import { Input, Modal, Form } from 'antd';
+import { RegEmail } from '@/constants/commonData';
 
 const formItemLayout = {
 	labelCol: {
@@ -87,10 +87,17 @@ class UserModal extends PureComponent {
 								}
 							],
 							initialValue : isEdit ? originUser.username : ''
-						})(<Input disabled={isEdit ? true : false}/>)}
+						})(<Input />)}
 					</Form.Item>
                     <Form.Item {...formItemLayout} label="邮箱">
 						{getFieldDecorator('email', {
+							rules: [
+								{
+									required: false,
+									message: '请输入正确的邮箱',
+									pattern: RegEmail
+								}
+							],
 							initialValue : isEdit ? originUser.email : ''
 						})(<Input />)}
 					</Form.Item>
@@ -104,22 +111,6 @@ class UserModal extends PureComponent {
 							],
 						})(<Input.Password/>)}
 					</Form.Item>}
-					<Form.Item {...formItemLayout} label="用户状态">
-						{getFieldDecorator('is_active', {
-							rules: [
-								{
-									required: false
-								}
-							],
-							initialValue : 'true'
-						})(
-							<Select  placeholder="请选择" >
-								<Option value={'true'}>普通用户</Option>
-								<Option value={'false'}>禁用用户</Option>
-							</Select>
-						)}
-                        
-					</Form.Item>
 				</Form>
 			</Modal>
 		);

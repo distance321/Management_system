@@ -1,7 +1,62 @@
 import React, { PureComponent } from 'react';
 import { Dropdown, Menu, Icon } from 'antd';
-
+import AmendModal from './amendModal'
+import { connect } from 'dva';
+@connect(({login}) => ({
+	resetSuccess: login.resetSuccess,
+	userId : login.userId
+}))
 class RightContent extends PureComponent {
+	state = { 
+		modelVisible: false,
+		userName: '' 
+	}
+
+	componentDidMount(){
+		const userName = sessionStorage.getItem('username')
+		this.setState({
+			userName : userName
+		})
+	}
+
+	onClick = ({ key }) => {
+		const { dispatch } = this.props;
+		if (key === 'logout') {
+			sessionStorage.removeItem('token')
+			sessionStorage.removeItem('username')
+			dispatch({
+				type: 'login/logout'
+			});
+		}
+	};
+
+	resetPassword = () => {
+		this.setState({
+			modelVisible: true
+		})
+	}
+
+	onCloseModal = () => {
+		this.setState({
+			modelVisible: false
+		});
+	};
+
+	onSavePassword = (newPassword) => {
+		const { dispatch } = this.props;
+		dispatch({
+			type: 'login/resetPwd',
+			payload: {username : sessionStorage.getItem('username'), password: newPassword}
+		})
+	}
+
+	componentDidUpdate() {
+		if (this.props.resetSuccess) {
+			this.setState({
+				modelVisible: false
+			});
+		}
+	}
 
 	render() {
 		const DropMenus = (
@@ -12,9 +67,15 @@ class RightContent extends PureComponent {
 		);
 		
 		return (
-			<div style={{float: 'right'}}>			
+			<div style={{float: 'right'}}>	
+				<AmendModal
+					visible={this.state.modelVisible}
+					onClose={this.onCloseModal}
+					style={{ top: 20 }}
+					onSave={this.onSavePassword}
+				/>		
 				<Dropdown overlay={DropMenus}>
-					<a><Icon type="user" style={{padding:'18px 10px',fontSize:'24px'}}/>admin</a>
+					<a><Icon type="user" style={{padding:'18px 10px',fontSize:'24px'}}/>{sessionStorage.getItem('username')}</a>
 				</Dropdown>
 			</div>
 		);

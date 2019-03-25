@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Row, Col, Button, Card, Table, Input, Divider, Popconfirm } from 'antd';
 import UserModal, { Users } from './components/userModal'
 import GroupTable from './components/groupTable'
+import AmendModal from '@/components/GlobalHeader/amendModal'
 import _ from 'lodash'
 @connect(({ users }) => ({
 	results: users.results,
@@ -18,7 +19,7 @@ class User extends PureComponent {
 		permissions: '',
 		editType: '',
 		searchVal: '',
-		id: ''
+		user: null
 	};
 
 	componentDidMount() {
@@ -54,10 +55,10 @@ class User extends PureComponent {
 	};
 	//确认添加数据
 	onSaveUser = values => {
-		const { dispatch, user_permissions } = this.props;
+		const { dispatch } = this.props;
 		dispatch({
 			type: 'users/create',
-			payload: { userInfo: values, user_permissions: user_permissions }
+			payload: values
 		});
 	};
 	//确认修改数据
@@ -109,22 +110,22 @@ class User extends PureComponent {
 		});
 	};
 	//重设密码
-	resetPassword = (id) => {
+	resetPassword = (user) => {
 		const { dispatch } = this.props;
-		dispatch({
-			type: 'login/getUserId'
-		})
 		this.setState({
 			amendVisible: true,
-			id: id
+			user: user
 		})
 	}
 	onSavePassword = (newPassword) => {
 		const { dispatch } = this.props;
 		dispatch({
 			type: 'login/resetPwd',
-			payload: newPassword
+			payload: {username: this.state.user.username, password: newPassword}
 		})
+		this.setState({
+			amendVisible: false
+		});
 	}
 	// 密码重置成功就自动关闭modal
 	componentDidUpdate() {
@@ -191,7 +192,7 @@ class User extends PureComponent {
 							<Divider type="vertical" />
 							<a onClick={() => this.toTable(record)}>权限</a>
 							<Divider type="vertical" />
-							<a onClick={() => this.resetPassword(record.id)}>重置密码</a>
+							<a onClick={() => this.resetPassword(record)}>重置密码</a>
 						</span>
 					);
 				}
@@ -202,6 +203,12 @@ class User extends PureComponent {
 		}
 		return (
 			<>
+				<AmendModal
+					visible={this.state.amendVisible}
+					onClose={this.onCloseModal}
+					style={{ top: 20 }}
+					onSave={this.onSavePassword}
+				/>
 				<UserModal
 					visible={this.state.modelVisible}
 					onClose={this.onCloseModal}
@@ -212,6 +219,23 @@ class User extends PureComponent {
 					editType={editType}
 					originUser={editUser}
 				/>
+				<Row>
+					<Card title="控制台">
+						<Row>
+							{/* <Col span={6}>
+								<Search
+									placeholder="用户登录名"
+									onSearch={this.onSearch}
+									onChange={this.onSearchValueChange}
+									style={{ width: 200 }}
+								/>
+							</Col> */}
+                            <Col span={4}>
+								<Button onClick={this.onAddUser} type="primary" icon="plus" style={{marginRight:10}}>添加用户</Button>
+                            </Col>
+						</Row>
+					</Card>
+                </Row>
 				<Row>
 					<Card bordered={false}>
 						<Table

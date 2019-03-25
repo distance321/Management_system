@@ -51,13 +51,9 @@ class SiderMenu extends Component {
 					selectedKeys={[pathname]}
 				>
 					{menuItems.map(item => (
-						<SubMenu key={item.key} title={item.title}>
-							{item.subItems.map(subItem => (
-								<Menu.Item key={subItem.url}>
-									<Link to={subItem.url}>{subItem.title}</Link>
-								</Menu.Item>
-							))}
-						</SubMenu>
+						<Menu.Item key={item.url}>
+							<Link to={item.url}>{item.title}</Link>
+						</Menu.Item>
 					))}
 				</Menu>
 			</Sider>
