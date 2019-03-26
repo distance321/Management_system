@@ -5,12 +5,24 @@ const Items = [
 		url: '/home'
 	},
 	{
+		title: <span><Icon type="money-collect" /><span>薪资管理</span></span>,
+		url: '/salary'
+	},
+	{
 		title: <span><Icon type="table" /><span>商品列表</span></span>,
 		url: '/goods/goodList',
 	},
 	{
 		title: <span><Icon type="plus-square" /><span>添加商品</span></span>,
 		url: '/goods/addGood'
+	},
+	{
+		title: <span><Icon type="team" /><span>会员列表</span></span>,
+		url: '/members/memberList'
+	},
+	{
+		title: <span><Icon type="usergroup-add" /><span>会员列表</span></span>,
+		url: '/members/addMember'
 	},
 	{
 		title: <span><Icon type="solution" /><span>员工列表</span></span>,
