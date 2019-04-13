@@ -42,7 +42,7 @@ class SiderMenu extends Component {
 				collapsible
 				collapsed={collapsed}
 			>
-				<div className={styles.logo} />
+				<div className={styles.logo} />
 				<Menu
 					mode="inline"
 					openKeys={this.state.openKeys}

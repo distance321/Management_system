@@ -5,10 +5,11 @@ import UserModal, { Users } from './components/userModal'
 import GroupTable from './components/groupTable'
 import AmendModal from '@/components/GlobalHeader/amendModal'
 import _ from 'lodash'
-@connect(({ users }) => ({
+@connect(({ users, menus }) => ({
 	results: users.results,
 	pagination: users.pagination,
-	count: users.count
+	count: users.count,
+	menus
 }))
 class User extends PureComponent {
 	state = {
@@ -74,7 +75,14 @@ class User extends PureComponent {
 		const { dispatch } = this.props;
 		const { id, editUser } = this.state
 		let userInfo = _.cloneDeep(editUser)
-		userInfo.user_permissions = values
+		userInfo.user_permissions = values.sort()
+		if(userInfo.username === sessionStorage.getItem('username')){
+			sessionStorage.setItem('per', values.sort())
+			dispatch({
+				type : 'menus/changeMenus',
+				payload : values.sort()
+			})
+		}
 		dispatch({
 			type: 'users/update',
 			payload: { userInfo: userInfo, id: id }
@@ -111,7 +119,6 @@ class User extends PureComponent {
 	};
 	//重设密码
 	resetPassword = (user) => {
-		const { dispatch } = this.props;
 		this.setState({
 			amendVisible: true,
 			user: user
@@ -138,6 +145,7 @@ class User extends PureComponent {
 	toTable = (record) => {
 		this.setState({
 			permissions: record.user_permissions,
+			editUser : record,
 			id: record.id,
 			toTable: true
 		})

@@ -1,4 +1,4 @@
-import { fetchMemberList, deleteMember, updateMember, fetchAllMember  } from '@/services/memberList'
+import { fetchMemberList, deleteMember, updateMember, fetchAllMember, createList  } from '@/services/memberList'
 import { notification } from 'antd';
 export default {
     namespace: 'memberList',
@@ -20,6 +20,17 @@ export default {
         *fetchAllMember(_, { call, put}) {
             const data = yield call(fetchAllMember);
             yield put({ type: 'changeAllMemberData', payload: data });
+        },
+        *createListMember({payload},{ call, put }){
+            const data = yield call(createList,payload)
+            if(data){
+                yield call(notification.success, {
+                    message: '导入会员信息成功'
+                });
+                yield put({
+					type: 'fetch'
+				});
+            }
         },
         *changePage({ payload }, { put }) {
             if (payload) {

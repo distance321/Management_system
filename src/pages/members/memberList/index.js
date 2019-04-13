@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Button, Card, Table, Input, Divider, Popconfirm } from 'antd';
+import { Row, Col, Button, Card, Table, Input, Divider, Popconfirm, message } from 'antd';
 import router from 'umi/router';
 import download from '@/utils/download'
 import MemberModal from './components/MemberModal'
+import Styles from '../../index.css'
 import _ from 'lodash'
+import * as XLSX from 'xlsx';
 const Search = Input.Search;
 @connect(({ memberList, loading }) => ({
     results: memberList.results,
@@ -108,15 +110,26 @@ class MemberList extends PureComponent {
         router.push('/members/addMember')
     }
 
+    createList = (values) => {
+        const { dispatch } = this.props;
+		dispatch({
+            type: 'memberList/createListMember',
+            payload : values
+        });
+    }
+
     getAllMember = () => {
         const { dispatch } = this.props;
 		dispatch({
 			type: 'memberList/fetchAllMember'
         });
-        const { allMember } = this.props
-        if(allMember.length){
-            this.downloadExl()
-        }
+        setTimeout(() => {
+            const { allMember } = this.props
+            if(allMember.length){
+                this.downloadExl()
+            }
+        }, 500);
+        
     }
     downloadExl = () => {
 		const { allMember } = this.props
@@ -130,6 +143,51 @@ class MemberList extends PureComponent {
         })
 		download(json,'会员信息.xlsx')
     }
+
+    onImportExcel = file => {
+		// 获取上传的文件对象
+		const { files } = file.target;
+		// 通过FileReader对象读取文件
+		const fileReader = new FileReader();
+		fileReader.onload = event => {
+			try {
+				const { result } = event.target;
+				// 以二进制流方式读取得到整份excel表格对象
+				const workbook = XLSX.read(result, { type: 'binary' });
+				// 存储获取到的数据
+				let data = [];
+				// 遍历每张工作表进行读取（这里默认只读取第一张表）
+				for (const sheet in workbook.Sheets) {
+                    // esline-disable-next-line
+                    if (workbook.Sheets.hasOwnProperty(sheet)) {
+                        // 利用 sheet_to_json 方法将 excel 转成 json 数据
+                        data = data.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
+                        // break; // 如果只取第一张表，就取消注释这行
+                    }
+                }
+                // 最终获取到并且格式化后的 json 数据
+                const uploadData = data.map(item=> {
+                    return {
+                        cardNumber :item['会员卡号'],
+                        name : item['姓名'],
+                        tel : item['联系方式'],
+                        category : item['会员类别']
+                    }
+                })
+                if(uploadData.length){
+                    this.createList(uploadData)
+                }
+			} catch (e) {
+                // 这里可以抛出文件类型错误不正确的相关提示
+                console.log(e)
+                message.error('文件内容格式不正确！');
+                this.upload.value = ''
+			}
+		};
+		// 以二进制方式打开文件
+		fileReader.readAsBinaryString(files[0]);
+    }
+    
     render() {
         const { results, loading, count, pagination } = this.props
         const columns = [
@@ -206,9 +264,13 @@ class MemberList extends PureComponent {
                                 style={{ width: 200 }}
                             />
                         </Col>
-                        <Col span={8}>
+                        <Col span={12}>
                             <Button onClick={this.addMember} type="primary" icon="plus" style={{marginRight:10}}>添加会员</Button>
-                            {/* <Button onClick={this.getAllMember} type="primary" icon="download">下载员工信息</Button> */}
+                            <Button onClick={this.getAllMember} type="primary" icon="download">下载会员信息</Button>
+                            <Button className={Styles.upload_wrap} type="primary" icon="upload">
+                                导入会员信息
+                                <input ref={upload => this.upload= upload} className={Styles.file_uploader} type='file' accept='.xlsx, .xls' onChange={this.onImportExcel} />
+                            </Button>
                         </Col>
                     </Card>
                 </Row>

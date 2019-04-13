@@ -17,6 +17,13 @@ export async function createPeople(params) {
 	});
 }
 
+export async function createList(params) {
+	return request(buildURL(`/api/v1/peopleList/`),{
+		method: 'PATCH',
+		body: params
+	});
+}
+
 export async function updatePeople(params) {
 	const Id = { Id : params.Id }
 	return request(buildURL(`/api/v1/peopleList/?${stringify(Id)}`),{

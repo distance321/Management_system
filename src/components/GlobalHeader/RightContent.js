@@ -24,6 +24,7 @@ class RightContent extends PureComponent {
 		if (key === 'logout') {
 			sessionStorage.removeItem('token')
 			sessionStorage.removeItem('username')
+			sessionStorage.removeItem('per')
 			dispatch({
 				type: 'login/logout'
 			});

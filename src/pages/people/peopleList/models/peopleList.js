@@ -1,4 +1,4 @@
-import { fetchPeopleList, deletePeople, updatePeople, fetchAllPeople  } from '@/services/peopleList'
+import { fetchPeopleList, deletePeople, updatePeople, fetchAllPeople, createList  } from '@/services/peopleList'
 import { notification } from 'antd';
 export default {
     namespace: 'peopleList',
@@ -20,6 +20,17 @@ export default {
         *fetchAllPeople(_, { call, put}) {
             const data = yield call(fetchAllPeople);
             yield put({ type: 'changeAllPeopleData', payload: data });
+        },
+        *createListPeople({payload},{ call, put }){
+            const data = yield call(createList,payload)
+            if(data){
+                yield call(notification.success, {
+                    message: '导入员工信息成功'
+                });
+                yield put({
+					type: 'fetch'
+				});
+            }
         },
         *changePage({ payload }, { put }) {
             if (payload) {

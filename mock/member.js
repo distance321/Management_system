@@ -44,6 +44,15 @@ export default {
         memberList.unshift(data)
         res.send(data)
     },
+    "PATCH /api/v1/memberList/": (req, res) => {
+        let data = req.body
+        data.forEach(item =>{
+            item.Id = memberList.length + 1
+            item.sales = 0
+            memberList.unshift(item)
+        })
+        res.send(data)
+    },
     "PUT /api/v1/memberList/": (req, res) => {
         const Id = Number(req.query.Id)
         for (let i = 0; i < memberList.length; i++) {
@@ -62,6 +71,7 @@ export default {
         res.send(req.body)
     },
     "DELETE /api/v1/memberList/": (req, res) => {
+        console.log(req.query)
         const Id = Number(req.query.Id)
         let data
         for (let i = 0; i < memberList.length; i++) {

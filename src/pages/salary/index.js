@@ -143,10 +143,13 @@ class SalaryList extends PureComponent {
 		dispatch({
 			type: 'salaryList/fetchAllSalary'
         });
-        const { allSalary } = this.props
-        if(allSalary.length){
-            this.downloadExl()
-        }
+        setTimeout(() => {
+            const { allSalary } = this.props
+            if(allSalary.length){
+                this.downloadExl()
+            }
+        }, 500);
+        
     }
     downloadExl = () => {
         const { allSalary } = this.props

@@ -17,6 +17,13 @@ export async function createMember(params) {
 	});
 }
 
+export async function createList(params) {
+	return request(buildURL(`/api/v1/memberList/`),{
+		method: 'PATCH',
+		body: params
+	});
+}
+
 export async function updateMember(params) {
 	const Id = { Id : params.Id }
 	return request(buildURL(`/api/v1/memberList/?${stringify(Id)}`),{

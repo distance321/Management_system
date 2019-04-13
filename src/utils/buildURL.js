@@ -1,3 +1,3 @@
 export default function buildURL(url) {
-	return `${BASE_URL}${url}`;
+	return `http://localhost:8000${url}`;
 }

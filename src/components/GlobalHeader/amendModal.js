@@ -58,6 +58,7 @@ class AmendModal extends Component {
 
 		return (
 			<Modal
+				title='修改密码'
 				okText="修改"
 				cancelText="取消"
 				okButtonProps={{disabled: !this.state.samePassword}}

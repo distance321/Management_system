@@ -30,8 +30,15 @@ export default {
     "POST /api/v1/peopleList/": (req, res) => {
         let data = req.body
         data.Id = peopleList.length + 1
-        data.sales = 0
         peopleList.unshift(data)
+        res.send(data)
+    },
+    "PATCH /api/v1/peopleList/": (req, res) => {
+        let data = req.body
+        data.forEach(item =>{
+            item.Id = peopleList.length + 1
+            peopleList.unshift(item)
+        })
         res.send(data)
     },
     "PUT /api/v1/peopleList/": (req, res) => {

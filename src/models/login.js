@@ -1,5 +1,4 @@
 import { Login, resetPwd } from '@/services/api';
-import { fetchUsers,fetchPermissions, } from '@/services/users'
 import { notification } from 'antd';
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
@@ -10,8 +9,6 @@ export default {
 		token: undefined,
 		resetSuccess: false,
 		userId : '',
-		permissions : null,
-		user_permissions : []
 	},
 	reducers: {
 		changeLoginStatus(state, { payload }) {
@@ -24,18 +21,6 @@ export default {
 		changeResetSuccess(state) {
 			state.resetSuccess = true;
 		},
-		changePermissions( state, { payload } ){
-			state.user_permissions = payload.results
-		},
-		changeUserId(state,{ payload }){
-			const username = sessionStorage.getItem('username')
-			payload.results.forEach(item => {
-				if(item.username === username){
-					state.userId = item.id
-					state.permissions = item.user_permissions
-				}
-			});
-		}
 	},
 	effects: {
 		*login({ payload }, { call, put }) {
@@ -48,6 +33,7 @@ export default {
 			} else {
 				sessionStorage.setItem('username', payload.username)
 				sessionStorage.setItem('token', response.token)
+				sessionStorage.setItem('per', response.user_permissions)
 				yield put({
 					type: 'changeLoginStatus',
 					payload: { ...response, ...{ status: true } }
@@ -71,22 +57,6 @@ export default {
 					})
 				})
 			);
-		},
-		*getUserId({ payload },{ call, put }){
-			const res = yield call(fetchUsers, payload )
-			if (res){
-				yield put({
-					type : 'changeUserId',
-					payload : res
-				})
-			}
-		},
-		*fetchPermissions({ payload }, { put, call }){
-            const result = yield call(fetchPermissions,payload);
-			yield put({
-				type: 'changePermissions',
-				payload: result
-			});
 		},
 		*resetPwd({ payload }, { call, put }) {
 			const res = yield call(resetPwd, payload);

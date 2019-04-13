@@ -41,6 +41,7 @@ class UserModal extends PureComponent {
 		validateFieldsAndScroll((err, values) => {
 			if (!err) {//打印输入表单的值
 				handlevisible()
+				values.user_permissions = [1,2,3,4,5,6,7,8]
 				onSave(values);
 				// console.log('Received values of form(Save): ', values);
 			}
@@ -51,11 +52,13 @@ class UserModal extends PureComponent {
 		const {
 			onEdit,
 			handlevisible,
+			originUser,
 			form: { validateFieldsAndScroll }
 		} = this.props;
 		validateFieldsAndScroll((err, values) => {
 			if (!err) {//打印输入表单的值
 				handlevisible()
+				values.user_permissions = originUser.user_permissions
 				onEdit(values);
 				// console.log('Received values of form(Edit): ', values);
 			}

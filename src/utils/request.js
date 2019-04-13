@@ -71,19 +71,31 @@ export default function request(url, option) {
 			Authorization :Token
 		};
 	}
-
-	return fetch(url, newOptions)
-		.then(checkStatus)
-		.then(response => {
-			// DELETE and 204 do not return data by default
-			// using .json will report an error.
-			if (response.status === 204) {
-				return response.status ;
-			}
-			return response.json();
-		})
+	
+	return Promise.race([
+        fetch(url, newOptions),
+        new Promise(function(resolve,reject){
+            setTimeout(() => {
+                const error = new Error('请求超时')
+                error.name = 'timeout'
+                reject(error)
+            }, 10000);
+        })])
+        .then(checkStatus)
+        .then((response) => {
+            if (response.status === 204) {
+                return response.status;
+            }
+            return response.json();
+        })
 		.catch(e => {
 			const status = e.name;
+			if(status === 'timeout'){
+                notification.error({
+                    message: `请求超时`,
+                    description: '请稍后重试',
+                });
+            }
 			if (status === 401) {
 				// @HACK
 				/* eslint-disable no-underscore-dangle */
