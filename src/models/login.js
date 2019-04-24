@@ -38,7 +38,7 @@ export default {
 					type: 'changeLoginStatus',
 					payload: { ...response, ...{ status: true } }
 				});
-				yield put(routerRedux.replace('/'));
+				yield put(routerRedux.replace('/home'));
 			}
 		},
 		*logout(_, { call, put }) {

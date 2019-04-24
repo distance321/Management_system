@@ -47,29 +47,47 @@ const Items = [
 	},
 ];
 
-let permissions = sessionStorage.getItem('per').split(',')
+let permissions = []
+sessionStorage.getItem('per') ?  permissions = sessionStorage.getItem('per').split(',') : permissions =[]
+
+
 let list = []
-permissions.forEach(item => {
-	Items.forEach(element => {
-		if(element.key === Number(item)){
-			list.push(element)
-		}
-	})
-});
+if(permissions.length){
+  permissions.forEach(item => {
+    Items.forEach(element => {
+      if(element.key === Number(item)){
+        list.push(element)
+      }
+    })
+  });
+}
+
 
 export default {
 	namespace: 'menus',
 	state: {
 		collapsed: false,
-		menuItems: list
-	},
+		menuItems: Items
+  },
+  subscriptions: {
+    setup({ dispatch, history }) {
+      return history.listen(({ pathname }) => {
+        if (pathname !== 'login' && list.length) {
+          dispatch({ type: 'changeMenuItems', payload: list });
+        }
+      });
+    },
+  },
 	reducers : {
 		updateCollapsed(state, { payload }){
 			state.collapsed = payload
 		},
 		updateMenus(state, { payload }){
 			state.menuItems = payload
-		}
+    },
+    changeMenuItems(state, { payload }){
+      state.menuItems = payload
+    }
 	},
 	effects : {
 		*changeCollapsed({ payload },{ put }){

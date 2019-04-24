@@ -71,7 +71,6 @@ export default {
         res.send(req.body)
     },
     "DELETE /api/v1/memberList/": (req, res) => {
-        console.log(req.query)
         const Id = Number(req.query.Id)
         let data
         for (let i = 0; i < memberList.length; i++) {

@@ -57,7 +57,8 @@ class SiderDemo extends PureComponent {
   
 
   judgeAuthority = ( pathname ) => {
-    let permissions = sessionStorage.getItem('per').split(',')
+    let permissions = []
+    sessionStorage.getItem('per') ?  permissions = sessionStorage.getItem('per').split(',') : permissions = []
     if(permissions.length > 0){
       switch (pathname) {
         case '/home': return (permissions.indexOf('1') > -1)
@@ -71,6 +72,8 @@ class SiderDemo extends PureComponent {
         case '/user' : return (permissions.indexOf('8') > -1)        
         default: return false
       }
+    }else {
+      return true
     }
   }
 
